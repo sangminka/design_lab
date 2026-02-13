@@ -1,0 +1,44 @@
+package ex07.push;
+
+import ex07.push.pub.LotteMart;
+import ex07.push.pub.Mart;
+import ex07.push.sub.Cus1;
+import ex07.push.sub.Cus2;
+import ex07.push.sub.Customer;
+
+/**
+ * push 방식 (옵저버 패턴)
+ * 1. 구현 방식 정해져 있음
+ * 2. 자바 lib : Reactive Java (자바9), Stomp(그 외)
+ * 3. 스프링 : stomp(WebSocket 라이브러리)
+ */
+public class App {
+    public static void main(String[] args) {
+        // 1. 객체 생성
+        Mart mart = new LotteMart();
+        Customer cus1 = new Cus1();
+        Customer cus2 = new Cus2();
+        // 2. 구독
+        mart.add(cus1);
+        System.out.println("고객1 구독");
+        mart.add(cus2);
+        System.out.println("고객2 구독");
+        // 3. 구독 취소
+        mart.remove(cus1);
+        System.out.println("고객1 구독취소");
+        // 4. 출판
+        System.out.println("롯데마트 입고시작");
+        new Thread(() -> {
+            System.out.println();
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+        }).start();
+        mart.received();
+
+    }
+}
